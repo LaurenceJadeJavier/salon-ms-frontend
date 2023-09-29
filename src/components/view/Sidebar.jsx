@@ -5,7 +5,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import Dashboard from "./components/dashboard";
 import Inventory from "./components/inventory";
 import Staff from "./components/Staff";
-import Logout from "../logout";
+import watson from './components/assets/watson.jpg';
 
 
 function Sidebar() {
@@ -24,7 +24,7 @@ function Sidebar() {
         />
       ),
       path: "/sidebar",
-      element : <Dashboard/>
+      element: <Dashboard />,
     },
     {
       name: "Inventory",
@@ -36,7 +36,7 @@ function Sidebar() {
         />
       ),
       path: "/sidebar/inventory", // Set the desired path for the "Inventory" link
-      element : <Inventory/>
+      element: <Inventory />,
     },
     {
       name: "Staff",
@@ -48,7 +48,7 @@ function Sidebar() {
         />
       ),
       path: "/sidebar/staff", // Set the desired path for the "Users" link
-      element : <Staff/>
+      element: <Staff />,
     },
     {
       name: "Notifications",
@@ -83,7 +83,6 @@ function Sidebar() {
       ),
       path: "/payments", // Set the desired path for the "Payments" link
     },
-    
   ];
 
   const toggleSidebar = () => {
@@ -140,13 +139,66 @@ function Sidebar() {
               </div>
             </Link>
           ))}
-          <Logout/>
         </div>
       </div>
       <div className="w-full">
-      <Outlet />
+        <div className="navbar bg-base-100 mt-4">
+          <div className="flex-1"></div>
+          <div className="flex-none">
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="btn btn-ghost btn-circle">
+                <div className="indicator">
+                <MDicons.MdNotifications size={24} />
+                  <span className="badge badge-sm indicator-item">8</span>
+                </div>
+              </label>
+              <div
+                tabIndex={0}
+                className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow"
+              >
+                <div className="card-body">
+                  <span className="font-bold text-lg">8 Items</span>
+                  <span className="text-info">Subtotal: $999</span>
+                  <div className="card-actions">
+                    <button className="btn btn-primary btn-block">
+                      View cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                <div className="w-10 rounded-full">
+                  <img src={watson} alt="User Avatar" />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <Link to="/profile" className="justify-between"> {/* Add Link for Profile */}
+                    Profile
+                    <span className="badge">New</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/settings" className="justify-between"> {/* Add Link for Settings */}
+                    Settings
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/logout" className="justify-between"> {/* Add Link for Logout */}
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <Outlet />
       </div>
-      
     </div>
   );
 }
