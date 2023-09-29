@@ -6,6 +6,7 @@ import Sidebar from './components/view/Sidebar'
 import Dashboard from './components/view/components/dashboard'
 import Inventory from './components/view/components/inventory'
 import Staff from './components/view/components/Staff'
+import Home from './components/clientside/home'
 
 
 function App() {
@@ -20,7 +21,10 @@ function App() {
           {/* Use separate route for Inventory */}
           <Route path="inventory" element={<Inventory />} />
           <Route path="staff" element={<Staff/>} />
+          
         </Route>
+        {/* client Routings */}
+        <Route path="/client" element={<Home />} />
       </Routes>
     </div>
   )
