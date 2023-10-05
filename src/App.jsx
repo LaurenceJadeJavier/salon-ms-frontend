@@ -10,6 +10,7 @@ import AdminSignUp from './components/AdminSignup'
 import AdminSignIn from './components/AdminSignin'
 import ClientSignup from './components/clientside/ClientSignup'
 import ClientSignin from './components/clientside/ClientSignin'
+import SignUp from './components/test'
 
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
         <Route path="/AdminSignin" element={<AdminSignIn />} />
         <Route path="/ClientSignup" element={<ClientSignup />} />
         <Route path="/ClientSignin" element={<ClientSignin />} />
+        <Route path="/lyrics" element={<SignUp/>} />
+
         <Route path="/sidebar/*" element={<Sidebar />}>
           {/* Use index route for Dashboard */}
           <Route index element={<Dashboard />} />
