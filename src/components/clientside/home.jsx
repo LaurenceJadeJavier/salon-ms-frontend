@@ -1,50 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as MDicons from "react-icons/md";
 import watson from "../view/components/assets/watson.jpg";
-import hope from "../view/components/assets/hope.jpg";
-import { IoIosNotifications } from "react-icons/io";
+import { Link, Outlet } from "react-router-dom";
+import Card from "./Card";
 
 function Home() {
-  const initialSalonCard = [
-    {
-      name: "Ruperts",
-      availability: "Open",
-      description:
-        "Our committed and competent team is here to help keep your hair, nails, skin, and body healthy and beautiful.",
-      image: hope,
-    },
-    {
-      name: "Ernest",
-      availability: "Close",
-      description: "Salon Description 2",
-      image: hope,
-    },
-    {
-      name: "Laurence",
-      availability: "Open",
-      description: "Salon Description 3",
-      image: hope,
-    },
-  ];
-
   const [search, setSearch] = useState("");
-  const [SalonCard, setSalonCard] = useState(initialSalonCard);
+  const [NotificationsComponents, setNotificationsComponents] = useState([
+    {
+      name: "Salon Name",
+      value: "Your booking was successful.",
+      timestamp: new Date(),
+      isActive: true,
+      image: watson,
+    },
+    {
+      name: "Salon 2",
+      value: "Your booking was successful.",
+      timestamp: new Date(),
+      isActive: true,
+      image: watson,
+    },
+    {
+      name: "Salon 3",
+      value: "Your booking was successful.",
+      timestamp: new Date(),
+      isActive: true,
+      image: watson,
+    },
+    // Add more notifications here
+  ]);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
-  // Function to handle search input change
   const handleSearchChange = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearch(searchTerm);
-    // Filter the SalonCard array based on the search input
-    const filteredSalonCard = initialSalonCard.filter((salon) =>
-      salon.name.toLowerCase().includes(searchTerm)
-    );
-    setSalonCard(filteredSalonCard);
+  };
+
+  const handleNotificationSelect = (notification) => {
+    setSelectedNotification(notification);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedNotification(null);
+  };
+
+  useEffect(() => {
+    const markNotificationsInactive = () => {
+      const updatedNotifications = NotificationsComponents.map(
+        (notification) => ({
+          ...notification,
+          isActive: false,
+        })
+      );
+      setNotificationsComponents(updatedNotifications);
+    };
+
+    const timerId = setInterval(markNotificationsInactive, 5000);
+
+    return () => clearInterval(timerId);
+  }, [NotificationsComponents]);
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const diff = now - timestamp;
+    if (diff < 60000) {
+      return "Just now";
+    } else if (diff < 3600000) {
+      const minutes = Math.floor(diff / 60000);
+      return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
+    } else if (diff < 86400000) {
+      const hours = Math.floor(diff / 3600000);
+      return `${hours} hr${hours > 1 ? "s" : ""} ago`;
+    } else {
+      return timestamp.toLocaleDateString();
+    }
   };
 
   return (
     <div>
       <div className="navbar bg-second">
         <div className="flex-1">
-          <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+          <a className="btn btn-ghost normal-case text-xl">LOGO</a>
         </div>
         <div className="flex-none gap-4">
           <div className="form-control">
@@ -56,23 +93,57 @@ function Home() {
               onChange={handleSearchChange}
             />
           </div>
-          <div className="dropdown dropdown-end">
+          <div className="relative inline-block text-left dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle">
               <div className="indicator">
-                <IoIosNotifications className="h-5 w-5" />
-                <span className="badge badge-sm indicator-item">8</span>
+                <MDicons.MdNotifications size={24} />
+                <span className="badge badge-sm indicator-item">
+                  {NotificationsComponents.length}
+                </span>
               </div>
             </label>
             <div
               tabIndex={0}
-              className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow"
+              className="mt-3 ml-4 z-[1] card card-compact dropdown-content w-72 bg-base-100 shadow"
             >
-              <div className="card-body">
-                <span className="font-bold text-lg">8 Items</span>
-                <span className="text-info">Subtotal: $999</span>
-                <div className="card-actions">
+              <div className="card-body max-h-[400px] overflow-y-auto">
+                <span className="font-bold text-lg">Notifications</span>
+                <ul className="flex flex-col flex-wrap gap-2">
+                  {NotificationsComponents.map((notification, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center space-x-2 justify-between notification-item cursor-pointer"
+                      onClick={() => handleNotificationSelect(notification)}
+                    >
+                      <div className="flex flex-row items-center gap-2">
+                        {notification.isActive && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        )}
+                        <img
+                          className="w-6 h-6 bg-primary rounded-full"
+                          src={notification.image}
+                          alt={`User ${notification.name} Avatar`}
+                        />
+                        <span
+                          className={`text-xs flex flex-col ${
+                            notification.isActive ? "active" : ""
+                          }`}
+                        >
+                          <strong className="text-xxs">
+                            {notification.name}
+                          </strong>
+                          <span>{notification.value}</span>
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {formatTimeAgo(notification.timestamp)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="card-actions mt-4">
                   <button className="btn btn-primary btn-block">
-                    View cart
+                    View All
                   </button>
                 </div>
               </div>
@@ -89,58 +160,39 @@ function Home() {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a className="justify-between">
+                <Link to="/profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link to="/settings">Settings</Link>
               </li>
               <li>
-                <a>Logout</a>
+                <Link to="/logout">Logout</Link>
               </li>
             </ul>
           </div>
         </div>
+        <Outlet />
       </div>
-
-      <div className="flex justify-center items-center mt-10">
-        {SalonCard.map((salon, index) => (
-          <div
-            key={index}
-            className={`card bordered mx-4 max-w-xs shadow-lg bg-white rounded-lg overflow-hidden transform hover:scale-105 transition-transform ease-in-out duration-300`}
-          >
-            <div className="relative group">
-              <img
-                src={salon.image}
-                alt={`Salon ${index + 1} Image`}
-                className="w-full h-auto transition-transform transform-gpu cursor-pointer group-hover:scale-105 group-hover:blur-sm" // Apply blur to the image on hover
-              />
-              <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-gray-800 text-white p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 backdrop-blur-md rounded-lg">
-                <p className="mt-2 text-white salon-description focus:outline-none focus:bg-opacity-80 focus:bg-gray-800 focus:text-white">
-                  {salon.description}
-                </p>
-              </div>
-            </div>
-            <div className="p-4">
-              <h2 className="text-xl font-semibold salon-name">{salon.name}</h2>
-              <p
-                className={`text-gray-500 ${
-                  salon.availability === "Open"
-                    ? "text-green-600"
-                    : "text-red-600"
-                } salon-availability`}
+      {selectedNotification && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="modal modal-open">
+            <div className="modal-box">
+              <h2>{selectedNotification.name}</h2>
+              <p>{selectedNotification.value}</p>
+              <button
+                className="btn btn-primary mt-4"
+                onClick={handleCloseModal}
               >
-                {salon.availability}
-              </p>
-              <button className="btn btn-primary mt-4 hover:bg-primary-500 hover:text-white transition duration-300">
-                Book Now
+                Close
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+      <Card search={search} onSearchChange={handleSearchChange} />
     </div>
   );
 }

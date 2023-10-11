@@ -6,6 +6,8 @@ import Dashboard from "./components/dashboard";
 import Inventory from "./components/inventory";
 import Staff from "./components/Staff";
 import watson from "./components/assets/watson.jpg";
+import Profile from "./components/profile";
+import Services from "./components/services";
 
 function formatTimeAgo(timestamp) {
   const now = new Date();
@@ -26,7 +28,6 @@ function formatTimeAgo(timestamp) {
 function Sidebar() {
   const [isOpenSidebar, setIsOpenSidebar] = useState(true);
   const [selected, setSelected] = useState("");
-  
 
   const sidebarComp = [
     {
@@ -66,6 +67,18 @@ function Sidebar() {
       element: <Staff />,
     },
     {
+      name: "Services",
+      icon: (
+        <MDicons.MdEventAvailable
+          className={`${
+            isOpenSidebar ? "text-lg" : "text-xl"
+          } transition-all duration-500 `}
+        />
+      ),
+      path: "/sidebar/services",
+      element: <Services/>
+    },
+    {
       name: "Notifications",
       icon: (
         <Io5icons.IoNotificationsSharp
@@ -75,17 +88,6 @@ function Sidebar() {
         />
       ),
       path: "/notifications",
-    },
-    {
-      name: "Orders",
-      icon: (
-        <MDicons.MdEventAvailable
-          className={`${
-            isOpenSidebar ? "text-lg" : "text-xl"
-          } transition-all duration-500 `}
-        />
-      ),
-      path: "/orders",
     },
     {
       name: "Payments",
@@ -100,6 +102,21 @@ function Sidebar() {
     },
   ];
 
+  const profileSettingsLogoutLinks = [
+    {
+      name: "Profile",
+      path: "/sidebar/profile",
+      element: <Profile />,
+    },
+    {
+      name: "Settings",
+      path: "/settings",
+    },
+    {
+      name: "Logout",
+      path: "/logout",
+    },
+  ];
   const toggleSidebar = () => {
     setIsOpenSidebar(!isOpenSidebar);
   };
@@ -267,22 +284,16 @@ function Sidebar() {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content mt-3 ml-4 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
               >
-                <li>
-                  <Link to="/profile" className="justify-between">
-                    Profile
-                    <span className="badge">New</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/settings" className="justify-between">
-                    Settings
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/logout" className="justify-between">
-                    Logout
-                  </Link>
-                </li>
+                {profileSettingsLogoutLinks.map((link) => (
+                  <li key={link.path}>
+                    <Link to={link.path} className="justify-between">
+                      {link.name}
+                      {link.name === "Profile" && (
+                        <span className="badge">New</span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

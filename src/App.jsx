@@ -11,6 +11,9 @@ import AdminSignIn from './components/AdminSignin'
 import ClientSignup from './components/clientside/ClientSignup'
 import ClientSignin from './components/clientside/ClientSignin'
 import SignUp from './components/test'
+import Salon from './components/clientside/salon'
+import Profile from './components/view/components/profile'
+import Services from './components/view/components/services'
 
 
 function App() {
@@ -31,10 +34,13 @@ function App() {
           {/* Use separate route for Inventory */}
           <Route path="inventory" element={<Inventory />} />
           <Route path="staff" element={<Staff/>} />
+          <Route path="services" element={<Services/>}/>
+          <Route path="profile" element={<Profile/>}/>
           
         </Route>
         {/* client Routings */}
-        <Route path="/client" element={<Home />} />
+        <Route path="/client/home" element={<Home />} />
+        <Route path="/salon/:id" element={<Salon/>} />
       </Routes>
     </div>
   )
