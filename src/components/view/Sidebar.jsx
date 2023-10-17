@@ -4,7 +4,7 @@ import * as MDicons from "react-icons/md";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Dashboard from "./components/dashboard";
 import Inventory from "./components/inventory";
-import Staff from "./components/Staff";
+import Staff from "./components/staff";
 import watson from "./components/assets/watson.jpg";
 import Profile from "./components/profile";
 import Services from "./components/services";
